@@ -42,6 +42,54 @@ Schema 负责约束结构。
 - 地图 Marker 展示
 - 静态网页导出
 
+# 主题
+
+React 组件化开发
+
+## 问题
+
+为什么需要组件？
+
+## 理解
+
+一个旅游攻略页面由多个独立模块组成。
+
+组件负责：
+
+接收数据
+
+↓
+
+渲染 UI
+
+例如，`TravelHeader` 负责展示目的地基础信息，`DayTimeline` 负责展示每日行程，`PlaceCard` 负责展示单个景点，`BudgetCard` 负责展示预算，`TravelTips` 负责展示旅行建议。
+
+组件化可以让页面更容易维护。修改预算展示时，只需要改 `BudgetCard`；修改景点样式时，只需要改 `PlaceCard`。
+
+## 示例
+
+`page.tsx` 从 `sample-guide.json` 读取数据，然后通过 props 传给组件：
+
+```text
+sample-guide.json
+↓
+page.tsx
+↓
+TravelHeader / DayTimeline / PlaceCard / BudgetCard / TravelTips
+↓
+Browser
+```
+
+## 未来应用
+
+未来：
+
+Agent 输出新的 TravelGuide
+
+↓
+
+页面自动更新
+
 ## 问题
 
 ## 理解

@@ -119,6 +119,80 @@ feat: define travel guide data schema
 
 实现基于 Mock 数据的旅游攻略页面。
 
+## Day 3
+
+## 日期：
+
+2026-07-10
+
+## 今日目标：
+
+实现旅游攻略展示页面。
+
+## 完成内容：
+
+- 创建 React 组件
+- 使用 JSON 数据驱动页面
+- 完成旅游攻略原型
+- 使用本地开发服务器验证页面渲染
+
+## 新增文件：
+
+- frontend/src/components/travel/TravelHeader.tsx
+- frontend/src/components/travel/DayTimeline.tsx
+- frontend/src/components/travel/PlaceCard.tsx
+- frontend/src/components/travel/BudgetCard.tsx
+- frontend/src/components/travel/TravelTips.tsx
+
+## 修改文件：
+
+- frontend/src/app/page.tsx
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习知识：
+
+- React Component
+- Props
+- 数据驱动 UI
+- 组件拆分
+
+## 技术理解：
+
+未来 Agent 只需要生成符合 `TravelGuide` 结构的 JSON，前端就可以自动展示页面。
+
+原因是页面组件并不关心数据来自哪里，只关心收到的数据结构是否稳定。`page.tsx` 读取 `sample-guide.json` 后，把目的地信息传给 `TravelHeader`，把每日行程传给 `DayTimeline`，把景点传给 `PlaceCard`，把预算传给 `BudgetCard`，把建议传给 `TravelTips`。
+
+当未来接入 Agent 后，只要 Agent 输出同样结构的 `TravelGuide JSON`，前端组件就可以复用，不需要为每个目的地重新写页面。
+
+## 测试结果：
+
+- `npm run lint` 通过。
+- `npm run dev` 启动后，`localhost:3000` 可以展示京都标题、三天行程、景点卡片、预算估算和旅行建议。
+- `npm run build` 在授权环境下通过，生产构建成功。
+
+实机测试截图：
+
+![Day 3 旅游攻略原型页面截图](./docs/images/day-3-travel-guide-prototype.png)
+
+## 遇到问题：
+
+- 首次在沙盒内运行 `npm run dev` 时，Next.js 无法绑定 `0.0.0.0:3000`，出现 `listen EPERM`。
+- 首次在沙盒内运行 `npm run build` 时，Next.js 16 的 Turbopack 创建进程和绑定端口被拦截。
+
+## 解决方案：
+
+- 使用授权方式重新运行 `npm run dev`，开发服务器成功启动，并完成本地页面验证。
+- 使用授权方式重新运行 `npm run build`，生产构建通过。
+
+## Git Commit:
+
+feat: build travel guide prototype page
+
+## 下一阶段：
+
+完善页面交互。
+
 ## 日期：
 
 ## 今日目标：
