@@ -1,44 +1,134 @@
+"use client";
+
+import { useState } from "react";
 import { BudgetCard } from "@/components/travel/BudgetCard";
 import { DayTimeline } from "@/components/travel/DayTimeline";
 import { PlaceCard } from "@/components/travel/PlaceCard";
 import { TravelHeader } from "@/components/travel/TravelHeader";
+import { TravelRequestForm } from "@/components/travel/TravelRequestForm";
 import { TravelTips } from "@/components/travel/TravelTips";
-import sampleGuide from "@/data/sample-guide.json";
+import { generateGuide } from "@/mock/generate-guide";
+import type { TravelRequest } from "@/types/request";
 import type { TravelGuide } from "@/types/travel";
 
-const guide = sampleGuide as TravelGuide;
-
 export default function Home() {
+  const [submittedRequest, setSubmittedRequest] =
+    useState<TravelRequest | null>(null);
+  const [guide, setGuide] = useState<TravelGuide | null>(null);
+
+  function handleGenerateGuide(request: TravelRequest) {
+    setSubmittedRequest(request);
+    setGuide(generateGuide(request));
+  }
+
   return (
-    <main className="min-h-screen bg-zinc-50 px-6 py-10 text-zinc-950">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <TravelHeader guide={guide} />
+    <main className="min-h-screen bg-[#f7f5ef] text-zinc-950">
+      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8 lg:py-12">
+        <section className="mb-10 rounded-[2rem] border border-zinc-200/80 bg-white/80 p-6 shadow-sm md:p-8">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">
+                AI Travel Agent
+              </p>
+              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950 md:text-5xl">
+                从旅行需求开始生成攻略
+              </h1>
+              <p className="mt-4 text-base leading-7 text-zinc-600">
+                Day 5 先建立用户输入层。当前使用 Mock Agent 返回示例攻略，
+                未来会替换为 Backend API 和真实 Agent Workflow。
+              </p>
+            </div>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="space-y-8">
-            <DayTimeline itinerary={guide.itinerary} places={guide.places} />
-
-            <section>
-              <div className="mb-5">
-                <p className="text-sm font-medium text-teal-700">Places</p>
-                <h2 className="mt-1 text-2xl font-semibold text-zinc-950">
-                  景点卡片
-                </h2>
-              </div>
-              <div className="grid gap-5 md:grid-cols-2">
-                {guide.places.map((place) => (
-                  <PlaceCard key={place.id} place={place} />
-                ))}
-              </div>
-            </section>
+            <TravelRequestForm onSubmit={handleGenerateGuide} />
           </div>
+        </section>
 
-          <aside className="space-y-8 lg:sticky lg:top-8 lg:self-start">
-            <BudgetCard budget={guide.budget} />
-            <TravelTips tips={guide.tips} />
-          </aside>
-        </div>
+        {submittedRequest ? (
+          <section className="mb-10 rounded-[2rem] border border-teal-100 bg-teal-50 p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">
+              Submitted Request
+            </p>
+            <div className="mt-4 grid gap-3 text-sm text-teal-950 md:grid-cols-3">
+              <p>目的地：{submittedRequest.destination}</p>
+              <p>天数：{submittedRequest.duration} 天</p>
+              <p>人数：{submittedRequest.travelers} 人</p>
+              <p>预算：{submittedRequest.budget.toLocaleString("zh-CN")}</p>
+              <p>风格：{submittedRequest.travelStyle}</p>
+              <p>偏好：{submittedRequest.preferences.join("、") || "未选择"}</p>
+            </div>
+          </section>
+        ) : null}
+
+        {guide ? (
+          <TravelGuideView guide={guide} />
+        ) : (
+          <section className="rounded-[2rem] border border-dashed border-zinc-300 bg-white/50 p-8 text-center">
+            <h2 className="text-2xl font-semibold tracking-tight text-zinc-950">
+              等待生成旅行攻略
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-zinc-600">
+              填写上方表单后，页面会在不刷新的情况下展示由 Mock 数据驱动的
+              TravelGuide 原型。
+            </p>
+          </section>
+        )}
       </div>
     </main>
+  );
+}
+
+function TravelGuideView({ guide }: { guide: TravelGuide }) {
+  return (
+    <>
+      <TravelHeader guide={guide} />
+
+      <section className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="space-y-10">
+          <DayTimeline itinerary={guide.itinerary} places={guide.places} />
+
+          <section>
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">
+                  Places
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950">
+                  值得停留的地点
+                </h2>
+              </div>
+              <p className="max-w-xl text-sm leading-6 text-zinc-600">
+                每个地点都来自同一份 TravelGuide 数据，未来可以直接替换为
+                Agent 生成的结果。
+              </p>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2">
+              {guide.places.map((place, index) => (
+                <PlaceCard key={place.id} place={place} index={index + 1} />
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
+          <BudgetCard budget={guide.budget} />
+          <TravelTips tips={guide.tips} />
+        </aside>
+      </section>
+
+      <section className="mt-12 rounded-[2rem] border border-zinc-200/80 bg-white/75 p-6 shadow-sm backdrop-blur md:p-8">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div>
+            <p className="text-sm font-semibold text-teal-700">Data Source</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+              Mock Agent 驱动页面
+            </h2>
+          </div>
+          <p className="text-sm leading-6 text-zinc-600 md:col-span-2">
+            当前页面先接收用户输入，再调用本地 generateGuide 函数返回示例
+            TravelGuide。未来这个函数会被 Backend API 和 Agent Workflow 替换。
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

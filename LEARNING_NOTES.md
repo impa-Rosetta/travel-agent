@@ -90,6 +90,101 @@ Agent 输出新的 TravelGuide
 
 页面自动更新
 
+# 主题
+
+Tailwind CSS 与组件设计
+
+## 问题
+
+为什么不用大量 CSS 文件？
+
+## 理解
+
+组件负责结构。
+
+Tailwind 负责快速表达样式。
+
+在这个项目里，`TravelHeader`、`DayTimeline`、`PlaceCard`、`BudgetCard` 和 `TravelTips` 都是独立组件。每个组件内部直接使用 Tailwind className 表达布局、间距、颜色、边框、阴影和响应式规则。
+
+这样做可以减少样式文件和组件文件之间的来回跳转，也能让组件的结构和视觉意图放在同一个地方阅读。
+
+## 示例
+
+```text
+React Component
+↓
+className 使用 Tailwind 工具类
+↓
+生成卡片、网格、间距、字体层级和响应式布局
+```
+
+例如：
+
+- `max-w-7xl` 控制页面最大宽度
+- `grid` 和 `xl:grid-cols-*` 控制响应式布局
+- `rounded-*`、`border`、`shadow-*` 形成卡片层级
+- `text-*` 和 `tracking-*` 控制文字层级
+
+## 未来应用
+
+未来：
+
+Agent 生成内容
+
+↓
+
+组件自动展示
+
+↓
+
+Tailwind 保持一致的产品视觉风格
+
+# 主题
+
+Agent 应用中的用户输入设计
+
+## 问题
+
+为什么 Agent 需要结构化用户输入？
+
+## 理解
+
+用户自然语言需要转换为系统可以处理的数据。
+
+旅游 Agent 需要知道目的地、旅行天数、人数、预算、兴趣偏好和旅行风格。用户可以用自由文本表达这些需求，但系统更适合处理稳定字段。
+
+`TravelRequest` 就是用户需求的结构化表达。它让前端、后端和未来 Agent Planner 都能围绕同一份输入数据工作。
+
+## 示例
+
+```text
+User Input
+↓
+TravelRequest
+↓
+Mock Agent
+↓
+TravelGuide
+↓
+Frontend
+```
+
+当前阶段用 Mock Agent 返回示例数据。未来会把 Mock Agent 替换为 Backend API 和真实 Agent Workflow。
+
+## 未来应用
+
+未来：
+
+User Request
+
+↓
+
+Agent Planner
+
+↓
+
+TravelGuide Structured Output
+
 ## 问题
 
 ## 理解

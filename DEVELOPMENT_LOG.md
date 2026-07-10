@@ -193,6 +193,162 @@ feat: build travel guide prototype page
 
 完善页面交互。
 
+## Day 4
+
+## 日期：
+
+2026-07-10
+
+## 今日目标：
+
+优化旅游攻略页面 UI。
+
+## 完成内容：
+
+- 优化页面布局
+- 完善组件样式
+- 增加响应式设计
+- 生成 Day 4 UI 预览图
+
+## 新增文件：
+
+- docs/images/day-4-ui-preview.png
+
+## 修改文件：
+
+- frontend/src/app/page.tsx
+- frontend/src/components/travel/TravelHeader.tsx
+- frontend/src/components/travel/DayTimeline.tsx
+- frontend/src/components/travel/PlaceCard.tsx
+- frontend/src/components/travel/BudgetCard.tsx
+- frontend/src/components/travel/TravelTips.tsx
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习知识：
+
+- Tailwind CSS
+- Responsive Design
+- UI 组件设计
+
+## 技术理解：
+
+好的 Agent 产品不仅需要生成正确内容，还需要优秀的展示层。
+
+Agent 负责生成结构化数据，但用户真正接触到的是页面。旅游攻略包含目的地、行程、景点、预算和建议，如果展示层没有清晰的信息层级，用户会难以快速理解攻略价值。
+
+本次优化通过 Hero 区域突出目的地，通过行程卡片强化阅读顺序，通过预算和建议侧栏提供辅助决策信息。这样未来 Agent 生成新的 `TravelGuide JSON` 后，前端可以用同一套组件把内容组织成更容易阅读的产品页面。
+
+## 测试结果：
+
+- `npm run lint` 通过。
+- `npm run dev` 启动后，页面可以正常打开并展示 Day 4 优化后的 UI。
+- `npm run build` 在授权环境下通过，生产构建成功。
+- 示例数据检查通过：包含 3 天行程、9 个景点、预算和经纬度信息。
+
+UI 预览图：
+
+![Day 4 UI 预览图](./docs/images/day-4-ui-preview.png)
+
+## 遇到问题：
+
+- 沙盒内无法直接绑定端口运行 `npm run dev`，需要授权运行本地开发服务器。
+- 沙盒内运行 `npm run build` 时，Next.js 16 的 Turbopack 创建进程和绑定端口被拦截。
+- Playwright 和系统截图工具在当前环境中无法完成真实浏览器截图。
+
+## 解决方案：
+
+- 使用授权方式运行 `npm run dev` 验证页面。
+- 使用授权方式运行 `npm run build` 验证生产构建。
+- 使用当前 TravelGuide 数据生成 `docs/images/day-4-ui-preview.png`，作为 Day 4 UI 预览记录。
+
+## Git Commit:
+
+feat: improve travel guide user interface
+
+## 下一阶段：
+
+加入地图可视化。
+
+## Day 5
+
+## 日期：
+
+2026-07-10
+
+## 今日目标：
+
+实现旅行需求输入原型。
+
+## 完成内容：
+
+- 创建 TravelRequest 数据模型
+- 创建输入表单
+- 模拟 Agent 生成流程
+- 使用 React State 管理用户输入和页面状态
+
+## 新增文件：
+
+- frontend/src/types/request.ts
+- frontend/src/components/travel/TravelRequestForm.tsx
+- frontend/src/mock/generate-guide.ts
+
+## 修改文件：
+
+- frontend/src/app/page.tsx
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习知识：
+
+- React State
+- 用户输入管理
+- 前后端交互思想
+
+## 技术理解：
+
+今天的 Mock Agent 是未来真实 Agent 的替代接口。
+
+当前 `generateGuide` 函数接收 `TravelRequest`，返回本地 `sample-guide.json`，模拟“用户提交需求后生成攻略”的过程。它不调用后端、不调用大模型，也不实现真实 Agent。
+
+这样做的意义是提前确定前端交互边界：页面只需要把用户输入整理成结构化 `TravelRequest`，再等待一个返回 `TravelGuide` 的生成函数。未来接入后端时，可以把本地 `generateGuide` 替换为 Backend API + Agent Workflow，而页面主流程不需要大改。
+
+React 状态流：
+
+```text
+Input
+↓
+State
+↓
+Function
+↓
+Component Update
+```
+
+## 测试结果：
+
+- `npm run lint` 通过。
+- `npm run build` 在授权环境下通过，生产构建成功。
+- `npm run dev` 启动后，页面可以展示旅行需求输入表单和等待生成状态。
+
+## 遇到问题：
+
+- 沙盒内运行 `npm run build` 时，Next.js 16 的 Turbopack 创建进程和绑定端口被拦截。
+- 沙盒内直接运行 `npm run dev` 需要授权绑定本地端口。
+
+## 解决方案：
+
+- 使用授权方式运行 `npm run build` 验证生产构建。
+- 使用授权方式运行 `npm run dev` 验证 Day 5 输入页面。
+
+## Git Commit:
+
+feat: add travel request input prototype
+
+## 下一阶段：
+
+开始准备 Backend 和 LLM 接口。
+
 ## 日期：
 
 ## 今日目标：
