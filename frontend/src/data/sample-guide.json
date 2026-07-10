@@ -1,0 +1,163 @@
+{
+  "id": "kyoto-3-day-sample",
+  "destination": "京都",
+  "country": "日本",
+  "duration": 3,
+  "summary": "这是一份京都三日旅行示例攻略，适合第一次到访京都的旅行者。行程覆盖经典寺院、神社、传统街区、自然景观和美食体验，节奏适中，方便未来用于前端页面、地图标记和 Agent 输出格式验证。",
+  "coverImage": "/images/kyoto-cover.jpg",
+  "tags": ["文化古都", "寺院神社", "慢旅行", "美食", "摄影"],
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "东山经典路线",
+      "description": "从清水寺开始，沿二年坂、三年坂步行到祇园，感受京都最经典的传统街区氛围。",
+      "places": ["kiyomizu-dera", "ninenzaka-sannenzaka", "gion"]
+    },
+    {
+      "day": 2,
+      "title": "伏见稻荷与京都市中心",
+      "description": "上午前往伏见稻荷大社，避开人流拍摄千本鸟居；下午返回市中心体验锦市场和鸭川散步。",
+      "places": ["fushimi-inari-taisha", "nishiki-market", "kamogawa-river"]
+    },
+    {
+      "day": 3,
+      "title": "岚山自然与庭园",
+      "description": "前往岚山竹林和天龙寺，下午可在渡月桥附近散步，作为三日行程的舒缓收尾。",
+      "places": ["arashiyama-bamboo-grove", "tenryu-ji", "togetsukyo-bridge"]
+    }
+  ],
+  "places": [
+    {
+      "id": "kiyomizu-dera",
+      "name": "清水寺",
+      "description": "京都代表性寺院之一，以木造舞台和城市景观闻名，适合作为东山路线的起点。",
+      "category": "temple",
+      "location": {
+        "latitude": 34.994856,
+        "longitude": 135.785046
+      },
+      "recommendedDuration": "1.5 小时",
+      "bestTime": "上午",
+      "ticketInfo": "成人约 400 日元，具体价格以现场公告为准。"
+    },
+    {
+      "id": "ninenzaka-sannenzaka",
+      "name": "二年坂・三年坂",
+      "description": "保留传统町屋风貌的石板坡道街区，适合散步、拍照和购买伴手礼。",
+      "category": "historic-street",
+      "location": {
+        "latitude": 34.998122,
+        "longitude": 135.780763
+      },
+      "recommendedDuration": "1 小时",
+      "bestTime": "上午至下午",
+      "ticketInfo": "免费开放。"
+    },
+    {
+      "id": "gion",
+      "name": "祇园",
+      "description": "京都著名传统街区，有花见小路、茶屋建筑和夜间散步氛围。",
+      "category": "district",
+      "location": {
+        "latitude": 35.003655,
+        "longitude": 135.775027
+      },
+      "recommendedDuration": "1.5 小时",
+      "bestTime": "傍晚",
+      "ticketInfo": "街区免费开放，餐饮和体验项目另计。"
+    },
+    {
+      "id": "fushimi-inari-taisha",
+      "name": "伏见稻荷大社",
+      "description": "以千本鸟居闻名的神社，是京都最具辨识度的地标之一。",
+      "category": "shrine",
+      "location": {
+        "latitude": 34.967146,
+        "longitude": 135.772671
+      },
+      "recommendedDuration": "2 小时",
+      "bestTime": "清晨",
+      "ticketInfo": "免费开放。"
+    },
+    {
+      "id": "nishiki-market",
+      "name": "锦市场",
+      "description": "被称为京都厨房的传统市场，适合体验小吃、腌菜、甜品和当地食材。",
+      "category": "food",
+      "location": {
+        "latitude": 35.005008,
+        "longitude": 135.764788
+      },
+      "recommendedDuration": "1 小时",
+      "bestTime": "中午",
+      "ticketInfo": "免费进入，餐饮按实际消费。"
+    },
+    {
+      "id": "kamogawa-river",
+      "name": "鸭川",
+      "description": "贯穿京都市区的河流，适合傍晚散步、休息和观察城市日常。",
+      "category": "nature",
+      "location": {
+        "latitude": 35.011636,
+        "longitude": 135.771674
+      },
+      "recommendedDuration": "45 分钟",
+      "bestTime": "傍晚",
+      "ticketInfo": "免费开放。"
+    },
+    {
+      "id": "arashiyama-bamboo-grove",
+      "name": "岚山竹林",
+      "description": "京都西部代表性自然景观，竹林步道适合清晨游览和摄影。",
+      "category": "nature",
+      "location": {
+        "latitude": 35.017209,
+        "longitude": 135.672009
+      },
+      "recommendedDuration": "45 分钟",
+      "bestTime": "清晨",
+      "ticketInfo": "免费开放。"
+    },
+    {
+      "id": "tenryu-ji",
+      "name": "天龙寺",
+      "description": "岚山区域的重要禅寺，以庭园景观和借景设计闻名。",
+      "category": "temple",
+      "location": {
+        "latitude": 35.01582,
+        "longitude": 135.674999
+      },
+      "recommendedDuration": "1 小时",
+      "bestTime": "上午",
+      "ticketInfo": "庭园参拜约 500 日元，具体价格以现场公告为准。"
+    },
+    {
+      "id": "togetsukyo-bridge",
+      "name": "渡月桥",
+      "description": "岚山标志性桥梁，可远眺山景，适合作为岚山行程收尾。",
+      "category": "landmark",
+      "location": {
+        "latitude": 35.012969,
+        "longitude": 135.677772
+      },
+      "recommendedDuration": "30 分钟",
+      "bestTime": "下午",
+      "ticketInfo": "免费开放。"
+    }
+  ],
+  "budget": {
+    "transportation": 3000,
+    "accommodation": 24000,
+    "food": 12000,
+    "ticket": 2500,
+    "other": 5000,
+    "total": 46500
+  },
+  "tips": [
+    "建议购买或准备交通 IC 卡，方便搭乘地铁、巴士和 JR。",
+    "清水寺、伏见稻荷大社和岚山竹林建议尽量早到，体验更舒适。",
+    "热门餐厅可能需要排队，午餐时间可以提前或错峰。",
+    "寺社参拜时注意保持安静，不在禁止拍摄区域拍照。",
+    "预算单位为日元，示例数据仅用于前端开发和结构验证。"
+  ]
+}

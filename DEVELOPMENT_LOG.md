@@ -66,6 +66,59 @@ feat: initialize frontend application
 
 创建旅游攻略数据模型。
 
+## Day 2
+
+## 日期：
+
+2026-07-10
+
+## 今日目标：
+
+设计旅游攻略数据模型。
+
+## 完成内容：
+
+- 创建 TypeScript Interface
+- 创建 Sample JSON
+- 创建数据结构文档
+
+## 新增文件：
+
+- frontend/src/types/travel.ts
+- frontend/src/data/sample-guide.json
+- docs/DATA_SCHEMA.md
+
+## 学习知识：
+
+- Schema
+- Interface
+- Structured Output
+- 数据驱动开发
+
+## 技术理解：
+
+Agent 应该输出结构化数据，而不是只输出一段自由文本。
+
+自由文本适合人阅读，但不适合程序稳定处理。旅游攻略未来需要被前端拆分成页面标题、每日行程、景点卡片、地图坐标、预算信息和导出内容。如果 Agent 只输出 Markdown，前端很难稳定判断每一段文字的真实含义。
+
+结构化数据可以让 Agent 的输出进入后续工程流程：Backend 可以校验 JSON 是否符合 Schema，Frontend 可以按字段渲染页面，地图可以读取经纬度生成 Marker，导出功能也可以复用同一份数据。
+
+## 遇到问题：
+
+无
+
+## 解决方案：
+
+无
+
+## Git Commit:
+
+feat: define travel guide data schema
+
+## 下一阶段：
+
+实现基于 Mock 数据的旅游攻略页面。
+
 ## 日期：
 
 ## 今日目标：
