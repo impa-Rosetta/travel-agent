@@ -3,6 +3,9 @@ import type { Place } from "@/types/travel";
 interface PlaceCardProps {
   place: Place;
   index: number;
+  imageUrl?: string;
+  selected?: boolean;
+  onSelect?: (placeId: string) => void;
 }
 
 const categoryLabel: Record<string, string> = {
@@ -15,9 +18,27 @@ const categoryLabel: Record<string, string> = {
   landmark: "地标",
 };
 
-export function PlaceCard({ place, index }: PlaceCardProps) {
+export function PlaceCard({
+  place,
+  index,
+  imageUrl,
+  selected = false,
+  onSelect,
+}: PlaceCardProps) {
   return (
-    <article className="group rounded-[1.5rem] border border-zinc-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <article
+      className={`group cursor-pointer overflow-hidden rounded-[1.5rem] border bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+        selected ? "border-teal-500 ring-4 ring-teal-100" : "border-zinc-200/80"
+      }`}
+      onClick={() => onSelect?.(place.id)}
+    >
+      {imageUrl ? (
+        <div
+          className="h-36 bg-zinc-200 bg-cover bg-center"
+          style={{ backgroundImage: `url(${imageUrl})` }}
+        />
+      ) : null}
+      <div className="p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -51,6 +72,7 @@ export function PlaceCard({ place, index }: PlaceCardProps) {
           <dd className="mt-1 leading-6">{place.ticketInfo}</dd>
         </div>
       </dl>
+      </div>
     </article>
   );
 }

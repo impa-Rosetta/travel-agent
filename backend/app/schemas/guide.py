@@ -86,6 +86,8 @@ class TravelGuide(BaseModel):
     summary: str = Field(min_length=1)
     # 封面图片地址，未来可替换为 AI 生成图片。
     coverImage: str
+    # 地点图片地址映射，key 为 place.id，value 为图片 URL 或 Mock 图片地址。
+    placeImages: dict[str, str] = Field(default_factory=dict)
     # 攻略标签。
     tags: list[str] = Field(min_length=1)
     # 每日行程。

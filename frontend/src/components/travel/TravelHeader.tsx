@@ -6,7 +6,16 @@ interface TravelHeaderProps {
 
 export function TravelHeader({ guide }: TravelHeaderProps) {
   return (
-    <header className="overflow-hidden rounded-[2rem] border border-white/70 bg-zinc-950 text-white shadow-xl shadow-zinc-900/10">
+    <header
+      className="overflow-hidden rounded-[2rem] border border-white/70 bg-zinc-950 bg-cover bg-center text-white shadow-xl shadow-zinc-900/10"
+      style={
+        guide.coverImage
+          ? {
+              backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.88), rgba(0,0,0,0.62)), url(${guide.coverImage})`,
+            }
+          : undefined
+      }
+    >
       <div className="grid gap-8 p-7 md:p-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:p-12">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-200">
@@ -31,7 +40,7 @@ export function TravelHeader({ guide }: TravelHeaderProps) {
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/10 p-6">
-          <p className="text-sm text-zinc-300">当前原型</p>
+          <p className="text-sm text-zinc-300">AI Travel Agent</p>
           <dl className="mt-6 space-y-5">
             <div>
               <dt className="text-xs uppercase tracking-[0.18em] text-teal-200">

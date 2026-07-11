@@ -482,6 +482,180 @@ Search Tool 返回模拟地点信息后，LLM 在生成 TravelGuide 时可以参
 - Image Agent
 - Export Agent
 
+# 主题
+
+Agent Workflow 架构
+
+## 问题
+
+为什么要把 Agent 拆成 Workflow？
+
+## 理解
+
+单个 Agent 类如果同时负责规划、调用工具、生成和校验，会很快变得难维护。Workflow 把过程拆成 Planner、Tools、Generator、Validator，每一步职责更清晰。
+
+## 示例
+
+```text
+Request
+↓
+Planner
+↓
+Tools
+↓
+Generator
+↓
+Validator
+↓
+TravelGuide
+```
+
+## 未来应用
+
+Day13-Day20 的搜索、地图、图片、导出和历史记录都可以围绕 Workflow 扩展。
+
+# 主题
+
+Search Tool 与 fallback
+
+## 问题
+
+为什么真实搜索工具还要保留 Mock fallback？
+
+## 理解
+
+外部 API 可能失败、超时、限流或网络不可用。Agent 工具应该设计为可替换接口，并在失败时提供降级结果，保证产品原型仍能运行。
+
+## 示例
+
+```text
+search_places()
+↓
+Public API
+↓
+失败时 Mock fallback
+```
+
+## 未来应用
+
+未来可以接入 Tavily、SerpAPI、Google Places 或自建搜索服务。
+
+# 主题
+
+地图交互
+
+## 问题
+
+地图能力为什么要和 TravelGuide 数据结构连接？
+
+## 理解
+
+地图 Marker 依赖 `Place.location` 的经纬度。只要 Agent 输出稳定地点数据，Frontend 就可以自动把地点渲染成地图 Marker，并和景点卡片联动。
+
+## 示例
+
+```text
+Place.location
+↓
+Marker
+↓
+Click
+↓
+Place Detail
+```
+
+## 未来应用
+
+未来可以把 Mock Map Mode 替换为 Leaflet 或 Mapbox。
+
+# 主题
+
+Image Agent 接口
+
+## 问题
+
+为什么图片能力也要做成工具接口？
+
+## 理解
+
+图片生成服务可能来自不同供应商。通过 `image_tool.py` 包装，业务层只关心 `coverImage` 和 `placeImages`，不用关心底层图片服务。
+
+## 示例
+
+```text
+TravelGuide
+↓
+Image Tool
+↓
+coverImage / placeImages
+```
+
+## 未来应用
+
+未来可以接入真实 AI 图片生成 API。
+
+# 主题
+
+导出与历史记录
+
+## 问题
+
+为什么 AI 产品需要下载和历史记录？
+
+## 理解
+
+生成结果如果只能临时查看，产品价值有限。下载让用户带走攻略，历史记录让用户回到过去生成的内容。
+
+## 示例
+
+```text
+TravelGuide
+↓
+Export Service
+↓
+Markdown / HTML / PDF
+```
+
+```text
+TravelRequest + TravelGuide
+↓
+SQLite
+↓
+History Page
+```
+
+## 未来应用
+
+未来可以增加登录、云端同步和多设备历史记录。
+
+# 主题
+
+部署与项目作品化
+
+## 问题
+
+为什么 GitHub 项目需要部署文档和 README 打磨？
+
+## 理解
+
+一个作品项目不只是代码能运行，还要让别人理解它解决什么问题、如何运行、架构如何设计、未来如何扩展。
+
+## 示例
+
+```text
+README
+↓
+Architecture
+↓
+Deployment
+↓
+Demo
+```
+
+## 未来应用
+
+后续可以把项目部署到 Vercel + Render，形成可访问的在线 Demo。
+
 ## 问题
 
 ## 理解

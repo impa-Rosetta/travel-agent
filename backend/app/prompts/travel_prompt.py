@@ -11,6 +11,7 @@ JSON 必须符合 TravelGuide Schema，字段包括：
 - duration: number
 - summary: string
 - coverImage: string
+- placeImages: object
 - tags: string[]
 - itinerary: DayPlan[]
 - places: Place[]
@@ -46,7 +47,7 @@ Budget 字段：
 2. places 至少包含 5 个地点。
 3. tips 至少包含 3 条实用建议。
 4. budget.total 应接近用户预算。
-5. coverImage 当前可以返回空字符串。
+5. coverImage 当前可以返回空字符串，placeImages 可以返回空 object。
 6. 如果无法确认真实信息，可以给出合理估计，但不要编造实时营业状态。
 7. duration 必须是 integer。
 8. budget 中所有金额必须是 integer。
@@ -63,6 +64,7 @@ JSON Example：
   "duration": 3,
   "summary": "三天京都文化探索行程。",
   "coverImage": "",
+  "placeImages": {},
   "tags": ["文化探索", "慢节奏"],
   "itinerary": [
     {

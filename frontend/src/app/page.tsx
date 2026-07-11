@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { BudgetCard } from "@/components/travel/BudgetCard";
 import { DayTimeline } from "@/components/travel/DayTimeline";
+import { DownloadButtons } from "@/components/travel/DownloadButtons";
 import { PlaceCard } from "@/components/travel/PlaceCard";
 import { TravelHeader } from "@/components/travel/TravelHeader";
+import { TravelMap } from "@/components/travel/TravelMap";
 import { TravelRequestForm } from "@/components/travel/TravelRequestForm";
 import { TravelTips } from "@/components/travel/TravelTips";
 import type { BackendResponse } from "@/types/api";
@@ -33,8 +35,8 @@ export default function Home() {
                 从旅行需求开始生成攻略
               </h1>
               <p className="mt-4 text-base leading-7 text-zinc-600">
-                Day 7 打通 Frontend 和 FastAPI Backend。当前后端接收请求并返回
-                JSON，未来会继续连接 Agent Workflow。
+                输入旅行需求后，Backend 会通过 Travel Workflow 调用工具、
+                LLM 和结构化校验，生成可交互的旅游攻略网页。
               </p>
             </div>
 
@@ -75,7 +77,7 @@ export default function Home() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-zinc-600">
               填写上方表单后，页面会在不刷新的情况下展示由 Mock 数据驱动的
-              TravelGuide 原型，并显示 FastAPI 返回的请求结果。
+              TravelGuide 攻略，并显示 FastAPI 返回的结构化结果。
             </p>
           </section>
         )}
@@ -85,6 +87,10 @@ export default function Home() {
 }
 
 function TravelGuideView({ guide }: { guide: TravelGuide }) {
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(
+    guide.places[0]?.id ?? null,
+  );
+
   return (
     <>
       <TravelHeader guide={guide} />
@@ -92,6 +98,11 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
       <section className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-10">
           <DayTimeline itinerary={guide.itinerary} places={guide.places} />
+          <TravelMap
+            places={guide.places}
+            selectedPlaceId={selectedPlaceId}
+            onSelectPlace={setSelectedPlaceId}
+          />
 
           <section>
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -110,7 +121,14 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
             </div>
             <div className="grid gap-5 md:grid-cols-2">
               {guide.places.map((place, index) => (
-                <PlaceCard key={place.id} place={place} index={index + 1} />
+                <PlaceCard
+                  key={place.id}
+                  place={place}
+                  index={index + 1}
+                  imageUrl={guide.placeImages?.[place.id]}
+                  selected={selectedPlaceId === place.id}
+                  onSelect={setSelectedPlaceId}
+                />
               ))}
             </div>
           </section>
@@ -119,6 +137,7 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
         <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
           <BudgetCard budget={guide.budget} />
           <TravelTips tips={guide.tips} />
+          <DownloadButtons guide={guide} />
         </aside>
       </section>
 
@@ -127,12 +146,12 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
           <div>
             <p className="text-sm font-semibold text-teal-700">Data Source</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-              Mock Agent 驱动页面
+              Agent Workflow 驱动页面
             </h2>
           </div>
           <p className="text-sm leading-6 text-zinc-600 md:col-span-2">
             当前页面先接收用户输入，再通过 fetch 调用 FastAPI Backend。后端返回
-            结构化 TravelGuide 后，前端直接使用这份 JSON 渲染页面。
+            结构化 TravelGuide 后，前端直接使用这份 JSON 渲染地图、行程和下载内容。
           </p>
         </div>
       </section>

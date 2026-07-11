@@ -1,6 +1,6 @@
-from app.agents.travel_agent import TravelAgent, TravelAgentError
 from app.schemas.guide import TravelGuide
 from app.schemas.travel import TravelRequest
+from app.workflows.travel_workflow import TravelWorkflowError, run_travel_workflow
 
 
 class TravelGuideGenerationError(Exception):
@@ -8,13 +8,12 @@ class TravelGuideGenerationError(Exception):
 
 
 def generate_travel_guide(request: TravelRequest) -> TravelGuide:
-    """通过 Travel Agent 生成结构化旅游攻略。
+    """通过 Travel Workflow 生成结构化旅游攻略。
 
-    API 路由不需要知道 Agent、Tool 和 LLM 细节，只调用这个稳定函数。
+    API 路由不需要知道 Planner、Tool、Generator 和 Validator 细节。
     """
 
     try:
-        agent = TravelAgent()
-        return agent.generate(request)
-    except TravelAgentError as error:
+        return run_travel_workflow(request)
+    except TravelWorkflowError as error:
         raise TravelGuideGenerationError(str(error)) from error

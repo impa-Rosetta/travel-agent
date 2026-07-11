@@ -881,6 +881,298 @@ feat: add agent tool calling framework
 
 将 Search Tool 从模拟数据升级为更规范的工具输入输出结构。
 
+## Day 12
+
+目标：
+
+Agent Workflow 架构。
+
+完成：
+
+- 创建 `backend/app/workflows/`
+- 拆分 Planner、Generator、Validator 和 Travel Workflow
+- `travel_service.py` 改为调用 `run_travel_workflow()`
+- 保持 `/api/travel/request` API 兼容
+
+技术学习：
+
+- Workflow
+- State
+- Planner
+- Generator
+- Validator
+
+新增文件：
+
+- backend/app/workflows/__init__.py
+- backend/app/workflows/state.py
+- backend/app/workflows/planner.py
+- backend/app/workflows/generator.py
+- backend/app/workflows/validator.py
+- backend/app/workflows/travel_workflow.py
+
+问题记录：
+
+- 原 `TravelAgent` 同时承担规划、工具、生成和校验职责，后续扩展会变复杂。
+
+Git Commit建议：
+
+feat: add travel workflow architecture
+
+## Day 13
+
+目标：
+
+将 Mock Search Tool 升级为可替换的搜索能力。
+
+完成：
+
+- `search_places()` 优先尝试公开 Wikipedia Summary API
+- 网络失败时保留 Mock fallback
+- 保持 Search Tool 返回 `{ name, description, location, category }` 数据格式
+
+技术学习：
+
+- Tool fallback
+- Public API wrapper
+- 外部工具接口设计
+
+新增文件：
+
+- 无
+
+问题记录：
+
+- 本地和部署环境不一定能访问外部搜索 API，因此必须保留 Mock fallback。
+
+Git Commit建议：
+
+feat: add replaceable search tool
+
+## Day 14
+
+目标：
+
+增加地图能力。
+
+完成：
+
+- 新增前端地图组件
+- 根据景点经纬度显示 Marker
+- 点击 Marker 查看景点详情
+- 攻略页面接入地图区域
+
+技术学习：
+
+- Map interaction
+- Marker
+- 经纬度可视化
+- React 状态联动
+
+新增文件：
+
+- frontend/src/components/travel/TravelMap.tsx
+
+问题记录：
+
+- 当前阶段不引入 Mapbox 或 Leaflet，以免增加复杂依赖；先用轻量 Mock Map Mode 理解交互结构。
+
+Git Commit建议：
+
+feat: add interactive travel map
+
+## Day 15
+
+目标：
+
+加入目的地视觉能力。
+
+完成：
+
+- TravelGuide 增加 `placeImages`
+- Backend 增加图片工具接口
+- Workflow Validator 自动补充 `coverImage` 和 `placeImages`
+- Frontend Header 支持封面图
+- PlaceCard 支持地点图片
+
+技术学习：
+
+- Image Agent interface
+- Mock image provider
+- 可替换服务设计
+
+新增文件：
+
+- backend/app/tools/image_tool.py
+
+问题记录：
+
+- 当前没有真实图片生成 API，因此使用 Mock 图片 URL，保持未来可替换接口。
+
+Git Commit建议：
+
+feat: add travel image capability
+
+## Day 16
+
+目标：
+
+升级交互式攻略页面。
+
+完成：
+
+- 地图 Marker 与景点卡片联动
+- 选中景点高亮
+- 景点卡片展示图片
+- 页面展示地图、路线、景点、预算和建议
+
+技术学习：
+
+- Interactive UI
+- React selected state
+- 数据驱动交互
+
+新增文件：
+
+- 无
+
+问题记录：
+
+- 不破坏现有页面结构的前提下增加交互，需要保持 `TravelGuide` 数据流不变。
+
+Git Commit建议：
+
+feat: improve interactive travel guide page
+
+## Day 17
+
+目标：
+
+支持攻略下载导出。
+
+完成：
+
+- Backend 新增 export service
+- 支持 Markdown、HTML 和可打印 PDF HTML
+- Frontend 新增下载按钮
+- 用户可以下载当前攻略
+
+技术学习：
+
+- Export service
+- Blob download
+- 内容序列化
+
+新增文件：
+
+- backend/app/services/export_service.py
+- frontend/src/components/travel/DownloadButtons.tsx
+
+问题记录：
+
+- 当前没有引入 PDF 渲染依赖，因此 PDF 先采用浏览器可打印 HTML 方案。
+
+Git Commit建议：
+
+feat: add travel guide export
+
+## Day 18
+
+目标：
+
+保存用户生成历史记录。
+
+完成：
+
+- Backend 新增 SQLite 历史记录服务
+- 生成攻略后保存 request 和 guide
+- 新增 `/api/travel/history`
+- Frontend 新增历史攻略页面
+
+技术学习：
+
+- SQLite
+- History persistence
+- API list endpoint
+
+新增文件：
+
+- backend/app/services/history_service.py
+- backend/data/.gitkeep
+- frontend/src/app/history/page.tsx
+
+问题记录：
+
+- SQLite 适合学习和原型，正式部署时需要注意持久化磁盘。
+
+Git Commit建议：
+
+feat: add travel guide history
+
+## Day 19
+
+目标：
+
+准备项目部署上线。
+
+完成：
+
+- Frontend API Base URL 支持环境变量
+- 新增 frontend `.env.example`
+- 新增部署文档
+- README 增加运行和环境变量说明
+
+技术学习：
+
+- Deployment environment
+- Frontend / Backend separation
+- Environment variables
+
+新增文件：
+
+- frontend/.env.example
+- docs/DEPLOYMENT.md
+
+问题记录：
+
+- 当前环境没有真实云平台凭证，因此完成部署准备文档和配置，不执行线上发布。
+
+Git Commit建议：
+
+docs: add deployment guide
+
+## Day 20
+
+目标：
+
+完善 GitHub 项目展示。
+
+完成：
+
+- 重写 README
+- 新增架构说明
+- 新增 Demo 说明
+- 整理当前产品能力和未来规划
+
+技术学习：
+
+- GitHub project polish
+- README structure
+- Demo documentation
+
+新增文件：
+
+- docs/ARCHITECTURE.md
+- docs/DEMO.md
+
+问题记录：
+
+- 项目已从学习原型进入可展示产品阶段，需要用 README 清晰表达价值、架构和运行方式。
+
+Git Commit建议：
+
+docs: polish project documentation
+
 ## 日期：
 
 ## 今日目标：

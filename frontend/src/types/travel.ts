@@ -12,6 +12,8 @@ export interface TravelGuide {
   summary: string;
   // 封面图片地址，未来可来自 AI 生成图片或外部图片资源。
   coverImage: string;
+  // 地点图片地址映射，key 为 Place.id。
+  placeImages?: Record<string, string>;
   // 攻略标签，用于表达主题、兴趣偏好或旅行风格。
   tags: string[];
   // 每日行程安排，用于渲染时间线和日程页面。
