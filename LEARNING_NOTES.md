@@ -375,6 +375,113 @@ React Components
 - 接入搜索工具补充实时信息
 - 接入地图和图片生成能力
 
+# 主题
+
+LLM 输出可靠性
+
+## 问题
+
+为什么 Agent 不能直接相信 LLM 输出？
+
+## 理解
+
+LLM 负责生成。
+
+Schema 负责约束。
+
+Parser 负责转换。
+
+Business Layer 负责使用。
+
+模型输出具有不确定性，即使 Prompt 要求返回 JSON，也可能出现格式漂移、字段缺失、类型错误或多余文本。Agent 系统需要把模型输出当作外部输入处理，而不是直接信任。
+
+可靠流程应该是：
+
+```text
+LLM Response
+↓
+JSON Parser
+↓
+Pydantic Validation
+↓
+TravelGuide
+↓
+Frontend
+```
+
+## 示例
+
+如果模型返回：
+
+```text
+Markdown code fence + JSON:
+{ "destination": "京都", "duration": 3 }
+```
+
+Parser 负责提取 JSON，Pydantic 负责发现字段缺失，Business Layer 再返回明确错误。
+
+## 未来应用
+
+未来可以继续增强：
+
+- 自动修复不完整 JSON
+- 对失败输出进行一次重试
+- 用 JSON Schema 直接约束模型输出
+- 为不同 Agent 定义不同的数据协议
+
+# 主题
+
+Agent 和 Tool 设计
+
+## 问题
+
+LLM 为什么需要工具？
+
+## 理解
+
+LLM 负责推理。
+
+Tool 负责获取外部能力。
+
+普通 LLM 调用只能依赖模型已有知识和 Prompt。Agent 加入 Tool 后，可以先根据任务做决策，再调用搜索、地图、图片、文件导出等工具，把工具返回的 Observation 交给 LLM 生成更可靠的结果。
+
+今天的 Search Tool 是模拟版本，重点不是搜索真实数据，而是理解工具层的位置：
+
+```text
+用户
+↓
+Agent
+↓
+Decision
+↓
+Tool
+↓
+Observation
+↓
+LLM
+↓
+Answer
+```
+
+## 示例
+
+用户请求京都文化旅行时，TravelAgent 会调用 Search Tool 查询：
+
+- 京都清水寺
+- 京都祇园
+- 京都伏见稻荷大社
+
+Search Tool 返回模拟地点信息后，LLM 在生成 TravelGuide 时可以参考这些观察结果。
+
+## 未来应用
+
+未来可以扩展：
+
+- Search Agent
+- Map Agent
+- Image Agent
+- Export Agent
+
 ## 问题
 
 ## 理解

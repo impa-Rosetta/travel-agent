@@ -707,6 +707,180 @@ feat: integrate llm travel agent
 
 完善 LLM 输出稳定性和错误提示。
 
+## Day 10
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+实现 LLM Structured Output。
+
+## 完成：
+
+- 完善 TravelGuide Schema 约束
+- 增加 JSON 解析层
+- 增加 Pydantic 验证
+- 将 LLM 输出流程改为 Parser 再 Validation
+- 保存 Structured Output 测试记录图
+
+## 新增文件：
+
+- backend/app/utils/json_parser.py
+- docs/images/day-10-structured-output-test.png
+
+## 修改文件：
+
+- backend/app/schemas/guide.py
+- backend/app/prompts/travel_prompt.py
+- backend/app/services/travel_service.py
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习：
+
+- Structured Output
+- Data Validation
+- Agent 可靠性设计
+- JSON Parser
+- Pydantic Schema Validation
+
+## 技术理解：
+
+LLM 输出不能直接交给 Frontend 使用，因为模型可能返回 Markdown、缺失字段、类型错误或引用不存在的地点 id。Day 10 增加了独立的 JSON Parser，把 LLM 文本输出先提取为 JSON，再交给 Pydantic 校验为 TravelGuide。
+
+Schema 现在负责约束字段类型、必填字段、经纬度范围、预算非负数、行程天数，以及 itinerary 中的 place id 是否存在于 places 列表。
+
+Day 10 的数据流：
+
+```text
+LLM
+↓
+JSON
+↓
+Schema Validation
+↓
+Business Object
+```
+
+## 测试结果：
+
+- `.venv/bin/python -m py_compile app/main.py app/api/travel.py app/schemas/travel.py app/schemas/guide.py app/llm/client.py app/prompts/travel_prompt.py app/services/travel_service.py app/utils/json_parser.py` 通过。
+- `parse_travel_guide_response()` 可以解析带 Markdown code fence 的 JSON，并成功返回 TravelGuide。
+- `POST /api/travel/request` 成功返回通过 Parser 和 Pydantic Validation 的 TravelGuide JSON。
+
+Structured Output 测试记录：
+
+![Day 10 Structured Output Test](docs/images/day-10-structured-output-test.png)
+
+## 遇到问题：
+
+- 当前运行环境无法直接使用系统截图工具捕获屏幕。
+
+## 解决方案：
+
+- 生成 Day 10 Structured Output 测试记录 PNG，记录 Parser 和 Schema Validation 已通过。
+
+## Git Commit:
+
+feat: add llm structured output validation
+
+## 下一阶段：
+
+增加 LLM 输出失败时的自动重试和修复机制。
+
+## Day 11
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+实现 Agent Tool Calling 基础。
+
+## 完成：
+
+- 创建 Tool Layer
+- 创建模拟 Search Tool
+- 创建 Travel Agent Service
+- Travel Service 改为调用 TravelAgent
+- 增加 Agent 和 Tool 调用日志
+- 保存 Agent Tool 调用测试记录图
+
+## 新增文件：
+
+- backend/app/tools/__init__.py
+- backend/app/tools/search_tool.py
+- backend/app/agents/travel_agent.py
+- docs/images/day-11-agent-tool-test.png
+
+## 修改文件：
+
+- backend/app/services/travel_service.py
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习：
+
+- Agent
+- Tool Calling
+- Workflow
+- Tool Layer
+- Observation
+
+## 技术理解：
+
+普通 LLM 调用是把用户需求直接交给模型生成结果。Agent 则会先接收任务，判断是否需要工具，调用工具获得 Observation，再把观察结果交给 LLM 生成最终 TravelGuide。
+
+今天的 Search Tool 是模拟版本，不调用真实搜索 API。它的作用是让项目先具备 Agent + Tool 的工程结构，未来可以把静态返回替换为真实搜索服务。
+
+Day 11 的数据流：
+
+```text
+用户
+↓
+Agent
+↓
+Decision
+↓
+Tool
+↓
+Observation
+↓
+LLM
+↓
+Answer
+```
+
+## 测试结果：
+
+- `.venv/bin/python -m py_compile app/main.py app/api/travel.py app/schemas/travel.py app/schemas/guide.py app/llm/client.py app/prompts/travel_prompt.py app/services/travel_service.py app/utils/json_parser.py app/tools/__init__.py app/tools/search_tool.py app/agents/travel_agent.py` 通过。
+- `search_places("京都清水寺")` 返回模拟搜索结果。
+- TravelAgent 工具阶段输出日志：`Agent decided to call search tool`。
+- `POST /api/travel/request` 通过 TravelAgent、Search Tool、LLM 和 TravelGuide Validation 后成功返回。
+
+Agent Tool 调用测试记录：
+
+![Day 11 Agent Tool Test](docs/images/day-11-agent-tool-test.png)
+
+## 遇到问题：
+
+- 本机 8000 端口已有后端服务运行。
+
+## 解决方案：
+
+- 临时使用 8001 端口启动后端，完成 Agent Tool Calling 测试后停止服务。
+
+## Git Commit:
+
+feat: add agent tool calling framework
+
+## 下一阶段：
+
+将 Search Tool 从模拟数据升级为更规范的工具输入输出结构。
+
 ## 日期：
 
 ## 今日目标：
