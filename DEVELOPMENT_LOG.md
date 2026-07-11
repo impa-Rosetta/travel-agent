@@ -349,6 +349,93 @@ feat: add travel request input prototype
 
 开始准备 Backend 和 LLM 接口。
 
+## Day 6
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+初始化 Backend。
+
+## 完成：
+
+- 创建 FastAPI 项目
+- 创建 API 接口
+- 创建 Pydantic Schema
+- 创建环境变量示例文件
+- 完成本地接口测试
+
+## 新增文件：
+
+- backend/requirements.txt
+- backend/.env.example
+- backend/README.md
+- backend/app/main.py
+- backend/app/api/travel.py
+- backend/app/schemas/travel.py
+- backend/app/services/.gitkeep
+
+## 学习：
+
+- Backend
+- FastAPI
+- REST API
+- Pydantic
+
+## 技术理解：
+
+Agent 应用需要 Backend，因为智能能力、密钥管理、请求校验、工具调用和工作流编排都不应该直接放在 Frontend。
+
+Frontend 负责交互和展示。Backend 负责接收请求、校验数据、保护 API Key，并在未来调用 Agent Workflow。今天的 Backend 只接收旅行需求并返回确认信息，还没有接入 LLM，也没有实现真正 Agent。
+
+当前架构：
+
+```text
+Frontend
+↓
+Backend
+↓
+Mock Service
+```
+
+未来架构：
+
+```text
+Frontend
+↓
+Backend
+↓
+Agent
+↓
+LLM
+↓
+Tools
+```
+
+## 测试结果：
+
+- `python3 -m py_compile app/main.py app/api/travel.py app/schemas/travel.py` 通过。
+- `GET /` 返回 `AI Travel Agent Backend Running`。
+- `POST /api/travel/request` 可以接收旅行需求并返回成功响应。
+
+## 遇到的问题：
+
+- 沙盒内直接运行 `uvicorn app.main:app --reload` 时，本地端口监听被拦截。
+
+## 解决方案：
+
+- 使用授权方式运行 `uvicorn app.main:app --reload`，完成接口验证后停止服务。
+
+## Git Commit:
+
+feat: initialize backend api service
+
+## 下一阶段：
+
+Frontend 连接 Backend。
+
 ## 日期：
 
 ## 今日目标：

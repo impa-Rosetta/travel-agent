@@ -185,6 +185,46 @@ Agent Planner
 
 TravelGuide Structured Output
 
+# 主题
+
+AI 应用中的 Backend 设计
+
+## 问题
+
+为什么 LLM 调用应该放 Backend？
+
+## 理解
+
+Frontend 负责交互。
+
+Backend 负责智能能力。
+
+LLM API Key、搜索 API Key 和其他外部工具密钥不能放在 Frontend，因为前端代码会被浏览器下载，密钥容易暴露。Backend 可以通过环境变量读取密钥，并在服务器端安全调用 LLM 和工具。
+
+Backend 还负责校验用户请求、处理错误、组织 Agent Workflow，并把稳定的数据结构返回给 Frontend。
+
+## 示例
+
+```text
+Frontend
+↓
+FastAPI Backend
+↓
+TravelRequest Schema
+↓
+Future Agent Workflow
+```
+
+当前 Day 6 只完成 FastAPI 基础服务和旅行需求接收接口。
+
+## 未来应用
+
+未来：
+
+Agent Workflow 运行在 Backend。
+
+Backend 接收 `TravelRequest`，调用 Agent，得到 `TravelGuide`，再返回给 Frontend 渲染。
+
 ## 问题
 
 ## 理解
