@@ -225,6 +225,52 @@ Agent Workflow 运行在 Backend。
 
 Backend 接收 `TravelRequest`，调用 Agent，得到 `TravelGuide`，再返回给 Frontend 渲染。
 
+# 主题
+
+Frontend 与 Backend 通信
+
+## 问题
+
+为什么不用 Frontend 直接运行 Agent？
+
+## 理解
+
+Backend 负责：
+
+- AI 逻辑
+- API Key
+- 工具调用
+- 请求校验
+- Agent Workflow
+
+Frontend 负责：
+
+- 用户输入
+- 交互状态
+- 页面展示
+
+如果 Frontend 直接运行 Agent，就会把密钥、工具调用和复杂逻辑暴露在浏览器里。通过 Backend API，可以让浏览器只发送结构化请求，并接收稳定 JSON 响应。
+
+## 示例
+
+```text
+用户提交表单
+↓
+React Component
+↓
+fetch()
+↓
+FastAPI /api/travel/request
+↓
+JSON Response
+↓
+React State 更新页面
+```
+
+## 未来应用
+
+未来 `travelRequest()` 不只是接收确认信息，而是会触发 Backend 中的 Mock Agent Service，再逐步替换为真实 Agent Workflow。
+
 ## 问题
 
 ## 理解

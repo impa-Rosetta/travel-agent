@@ -14,3 +14,5 @@ class TravelRequest(BaseModel):
     budget: int
     # 兴趣偏好，例如文化探索、美食旅行、自然风光、购物。
     preferences: list[str]
+    # 旅行风格，例如轻松慢游、经典打卡、深度体验。
+    travelStyle: str

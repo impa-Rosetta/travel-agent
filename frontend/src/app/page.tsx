@@ -7,18 +7,18 @@ import { PlaceCard } from "@/components/travel/PlaceCard";
 import { TravelHeader } from "@/components/travel/TravelHeader";
 import { TravelRequestForm } from "@/components/travel/TravelRequestForm";
 import { TravelTips } from "@/components/travel/TravelTips";
-import { generateGuide } from "@/mock/generate-guide";
-import type { TravelRequest } from "@/types/request";
+import sampleGuide from "@/data/sample-guide.json";
+import type { BackendResponse } from "@/types/api";
 import type { TravelGuide } from "@/types/travel";
 
 export default function Home() {
-  const [submittedRequest, setSubmittedRequest] =
-    useState<TravelRequest | null>(null);
+  const [backendResponse, setBackendResponse] =
+    useState<BackendResponse | null>(null);
   const [guide, setGuide] = useState<TravelGuide | null>(null);
 
-  function handleGenerateGuide(request: TravelRequest) {
-    setSubmittedRequest(request);
-    setGuide(generateGuide(request));
+  function handleBackendResponse(response: BackendResponse) {
+    setBackendResponse(response);
+    setGuide(sampleGuide as TravelGuide);
   }
 
   return (
@@ -34,27 +34,35 @@ export default function Home() {
                 从旅行需求开始生成攻略
               </h1>
               <p className="mt-4 text-base leading-7 text-zinc-600">
-                Day 5 先建立用户输入层。当前使用 Mock Agent 返回示例攻略，
-                未来会替换为 Backend API 和真实 Agent Workflow。
+                Day 7 打通 Frontend 和 FastAPI Backend。当前后端接收请求并返回
+                JSON，未来会继续连接 Agent Workflow。
               </p>
             </div>
 
-            <TravelRequestForm onSubmit={handleGenerateGuide} />
+            <TravelRequestForm onSubmit={handleBackendResponse} />
           </div>
         </section>
 
-        {submittedRequest ? (
+        {backendResponse ? (
           <section className="mb-10 rounded-[2rem] border border-teal-100 bg-teal-50 p-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">
-              Submitted Request
+              Backend Response
+            </p>
+            <p className="mt-2 text-sm font-medium text-teal-950">
+              {backendResponse.message}
             </p>
             <div className="mt-4 grid gap-3 text-sm text-teal-950 md:grid-cols-3">
-              <p>目的地：{submittedRequest.destination}</p>
-              <p>天数：{submittedRequest.duration} 天</p>
-              <p>人数：{submittedRequest.travelers} 人</p>
-              <p>预算：{submittedRequest.budget.toLocaleString("zh-CN")}</p>
-              <p>风格：{submittedRequest.travelStyle}</p>
-              <p>偏好：{submittedRequest.preferences.join("、") || "未选择"}</p>
+              <p>状态：{backendResponse.status}</p>
+              <p>目的地：{backendResponse.data.destination}</p>
+              <p>天数：{backendResponse.data.duration} 天</p>
+              <p>人数：{backendResponse.data.travelers} 人</p>
+              <p>
+                预算：{backendResponse.data.budget.toLocaleString("zh-CN")}
+              </p>
+              <p>风格：{backendResponse.data.travelStyle}</p>
+              <p>
+                偏好：{backendResponse.data.preferences.join("、") || "未选择"}
+              </p>
             </div>
           </section>
         ) : null}
@@ -68,7 +76,7 @@ export default function Home() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-zinc-600">
               填写上方表单后，页面会在不刷新的情况下展示由 Mock 数据驱动的
-              TravelGuide 原型。
+              TravelGuide 原型，并显示 FastAPI 返回的请求结果。
             </p>
           </section>
         )}
@@ -124,8 +132,8 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
             </h2>
           </div>
           <p className="text-sm leading-6 text-zinc-600 md:col-span-2">
-            当前页面先接收用户输入，再调用本地 generateGuide 函数返回示例
-            TravelGuide。未来这个函数会被 Backend API 和 Agent Workflow 替换。
+            当前页面先接收用户输入，再通过 fetch 调用 FastAPI Backend。后端返回
+            请求确认结果后，前端继续使用示例 TravelGuide 展示页面。
           </p>
         </div>
       </section>

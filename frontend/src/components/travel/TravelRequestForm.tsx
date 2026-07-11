@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { travelRequest } from "@/lib/api";
+import type { BackendResponse } from "@/types/api";
 import type { TravelRequest } from "@/types/request";
 
 interface TravelRequestFormProps {
-  onSubmit: (request: TravelRequest) => void;
+  onSubmit: (response: BackendResponse) => void;
 }
 
 const preferenceOptions = ["文化探索", "美食旅行", "自然风光", "购物"];
@@ -21,6 +23,8 @@ const initialRequest: TravelRequest = {
 
 export function TravelRequestForm({ onSubmit }: TravelRequestFormProps) {
   const [request, setRequest] = useState<TravelRequest>(initialRequest);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   function updateField<K extends keyof TravelRequest>(
     field: K,
@@ -45,9 +49,23 @@ export function TravelRequestForm({ onSubmit }: TravelRequestFormProps) {
     });
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onSubmit(request);
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await travelRequest(request);
+      onSubmit(response);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "请求失败，请稍后再试。";
+      setErrorMessage(message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -63,8 +81,8 @@ export function TravelRequestForm({ onSubmit }: TravelRequestFormProps) {
           输入你的旅行需求
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">
-          当前不会调用 AI 或后端。提交后会把用户需求交给本地 Mock Agent，
-          再返回示例 TravelGuide 数据。
+          当前不会调用 AI。提交后会把用户需求发送给 FastAPI Backend，
+          再由前端展示接口返回结果。
         </p>
       </div>
 
@@ -169,14 +187,21 @@ export function TravelRequestForm({ onSubmit }: TravelRequestFormProps) {
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
           type="submit"
-          className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
+          disabled={isLoading}
+          className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
         >
-          生成旅行攻略
+          {isLoading ? "生成中..." : "生成旅行攻略"}
         </button>
         <p className="text-sm text-zinc-500">
-          当前会输出用户输入内容，并返回本地示例攻略。
+          当前会调用 Backend API，并显示后端响应结果。
         </p>
       </div>
+
+      {errorMessage ? (
+        <p className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">
+          {errorMessage}
+        </p>
+      ) : null}
     </form>
   );
 }

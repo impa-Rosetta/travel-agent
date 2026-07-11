@@ -436,6 +436,92 @@ feat: initialize backend api service
 
 Frontend 连接 Backend。
 
+## Day 7
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+完成前后端通信。
+
+## 完成内容：
+
+- 创建 API 封装
+- 前端调用 FastAPI
+- 替换 Mock 调用
+- 增加 loading 状态和错误处理
+- 为本地前后端通信配置 CORS
+
+## 新增文件：
+
+- frontend/src/lib/api.ts
+- frontend/src/types/api.ts
+
+## 修改文件：
+
+- frontend/src/app/page.tsx
+- frontend/src/components/travel/TravelRequestForm.tsx
+- backend/app/main.py
+- backend/app/schemas/travel.py
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习：
+
+- REST API
+- HTTP Request
+- Frontend Backend Communication
+
+## 技术理解：
+
+AI 应用通常采用前后端分离，因为 Frontend 和 Backend 的职责不同。
+
+Frontend 负责用户输入、交互状态和结果展示。Backend 负责接收请求、校验数据、保护 API Key，并在未来调用 Agent Workflow。这样可以避免把 LLM Key、工具调用和复杂工作流暴露在浏览器中。
+
+Day 7 的数据流：
+
+```text
+用户
+↓
+React Component
+↓
+fetch()
+↓
+FastAPI Endpoint
+↓
+JSON Response
+↓
+React State
+```
+
+## 测试结果：
+
+- `npm run lint` 通过。
+- `npm run build` 在授权环境下通过，生产构建成功。
+- `POST /api/travel/request` 返回成功响应。
+- CORS 预检请求通过，允许 `http://localhost:3000` 调用后端。
+- 前端页面可以加载 Day 7 表单和 Backend 通信说明。
+
+## 遇到问题：
+
+- 浏览器从 `localhost:3000` 请求 `127.0.0.1:8000` 需要 CORS 配置。
+- 沙盒内运行本地前后端服务和构建时仍会遇到端口或 Turbopack 权限限制。
+
+## 解决方案：
+
+- 在 FastAPI 中添加 `CORSMiddleware`，允许本地 Next.js 前端访问。
+- 使用授权方式运行 `uvicorn`、`npm run dev` 和 `npm run build` 完成验证。
+
+## Git Commit:
+
+feat: connect frontend with backend api
+
+## 下一阶段：
+
+Backend 接入 Mock Agent Service。
+
 ## 日期：
 
 ## 今日目标：
