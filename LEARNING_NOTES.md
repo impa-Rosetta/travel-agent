@@ -271,6 +271,61 @@ React State 更新页面
 
 未来 `travelRequest()` 不只是接收确认信息，而是会触发 Backend 中的 Mock Agent Service，再逐步替换为真实 Agent Workflow。
 
+# 主题
+
+Backend 中的 Agent 设计
+
+## 问题
+
+为什么不直接在 API 调用 LLM？
+
+## 理解
+
+API 负责通信。
+
+Service 负责业务。
+
+Agent 负责智能。
+
+如果 API 路由里直接调用 LLM，接口会同时承担请求接收、参数校验、业务流程、模型调用、错误处理和结果格式化，后续会很难维护。
+
+Service Layer 可以作为稳定边界：API 把结构化请求交给 Service，Service 再决定当前使用 Mock Generator，还是未来使用真实 Agent Workflow。
+
+## 示例
+
+```text
+API
+↓
+Service
+↓
+Mock Generator
+↓
+TravelGuide
+```
+
+未来：
+
+```text
+API
+↓
+Agent Workflow
+↓
+LLM
+↓
+Tools
+↓
+TravelGuide
+```
+
+## 未来应用
+
+Service Layer 会扩展：
+
+- Planner Agent
+- Search Agent
+- Map Agent
+- Image Agent
+
 ## 问题
 
 ## 理解

@@ -7,7 +7,6 @@ import { PlaceCard } from "@/components/travel/PlaceCard";
 import { TravelHeader } from "@/components/travel/TravelHeader";
 import { TravelRequestForm } from "@/components/travel/TravelRequestForm";
 import { TravelTips } from "@/components/travel/TravelTips";
-import sampleGuide from "@/data/sample-guide.json";
 import type { BackendResponse } from "@/types/api";
 import type { TravelGuide } from "@/types/travel";
 
@@ -18,7 +17,7 @@ export default function Home() {
 
   function handleBackendResponse(response: BackendResponse) {
     setBackendResponse(response);
-    setGuide(sampleGuide as TravelGuide);
+    setGuide(response.data);
   }
 
   return (
@@ -54,14 +53,14 @@ export default function Home() {
             <div className="mt-4 grid gap-3 text-sm text-teal-950 md:grid-cols-3">
               <p>状态：{backendResponse.status}</p>
               <p>目的地：{backendResponse.data.destination}</p>
+              <p>国家/地区：{backendResponse.data.country}</p>
               <p>天数：{backendResponse.data.duration} 天</p>
-              <p>人数：{backendResponse.data.travelers} 人</p>
               <p>
-                预算：{backendResponse.data.budget.toLocaleString("zh-CN")}
+                总预算：{backendResponse.data.budget.total.toLocaleString("zh-CN")}
               </p>
-              <p>风格：{backendResponse.data.travelStyle}</p>
+              <p>景点数量：{backendResponse.data.places.length} 个</p>
               <p>
-                偏好：{backendResponse.data.preferences.join("、") || "未选择"}
+                标签：{backendResponse.data.tags.join("、") || "暂无标签"}
               </p>
             </div>
           </section>
@@ -133,7 +132,7 @@ function TravelGuideView({ guide }: { guide: TravelGuide }) {
           </div>
           <p className="text-sm leading-6 text-zinc-600 md:col-span-2">
             当前页面先接收用户输入，再通过 fetch 调用 FastAPI Backend。后端返回
-            请求确认结果后，前端继续使用示例 TravelGuide 展示页面。
+            结构化 TravelGuide 后，前端直接使用这份 JSON 渲染页面。
           </p>
         </div>
       </section>

@@ -522,6 +522,87 @@ feat: connect frontend with backend api
 
 Backend 接入 Mock Agent Service。
 
+## Day 8
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+Backend Agent Service 设计。
+
+## 完成：
+
+- 创建 Service Layer
+- 迁移 Mock Agent
+- Backend 生成 TravelGuide
+- Frontend 改为展示 Backend 返回的 TravelGuide
+
+## 新增文件：
+
+- backend/app/schemas/guide.py
+- backend/app/services/travel_service.py
+
+## 修改文件：
+
+- backend/app/api/travel.py
+- frontend/src/app/page.tsx
+- frontend/src/types/api.ts
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习：
+
+- Service Layer
+- Backend 业务逻辑
+- Agent 架构
+- 前后端数据协议
+
+## 技术理解：
+
+API 负责通信，Service 负责业务流程，未来 Agent 负责智能生成。
+
+如果把所有逻辑都写在 API 接口里，接口会越来越难维护，也不方便测试和替换。Service Layer 把“接收请求”和“生成攻略”拆开，让后续从 Mock Agent 切换到 LLM Agent Workflow 时，不需要大幅修改前端和 API 路由。
+
+Day 8 的数据流：
+
+```text
+Frontend
+↓
+FastAPI API
+↓
+Travel Service
+↓
+Mock Agent
+↓
+TravelGuide
+```
+
+## 测试结果：
+
+- `python3 -m py_compile app/main.py app/api/travel.py app/schemas/travel.py app/schemas/guide.py app/services/travel_service.py` 通过。
+- `POST /api/travel/request` 可以返回完整 TravelGuide。
+- 输入 `西安` 时，Backend 返回西安版行程、景点、预算和建议。
+- `npm run lint` 通过。
+- `npm run build` 在授权环境下通过，生产构建成功。
+
+## 遇到问题：
+
+- 沙盒内直接运行 `npm run build` 时，Turbopack 创建进程和绑定端口被拦截。
+
+## 解决方案：
+
+- 使用授权环境运行 `npm run build` 完成生产构建验证。
+
+## Git Commit:
+
+feat: add backend travel service layer
+
+## 下一阶段：
+
+准备真实 LLM 接入前的接口边界和错误处理。
+
 ## 日期：
 
 ## 今日目标：
