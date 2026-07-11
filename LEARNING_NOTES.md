@@ -326,6 +326,55 @@ Service Layer 会扩展：
 - Map Agent
 - Image Agent
 
+# 主题
+
+LLM Agent 基础
+
+## 问题
+
+LLM 为什么不能直接输出普通文本？
+
+## 理解
+
+AI 应用需要：
+
+```text
+输入约束
+↓
+模型生成
+↓
+结构化解析
+↓
+业务使用
+```
+
+普通文本适合人阅读，但不适合程序稳定处理。旅游攻略页面需要明确知道目的地、天数、景点、坐标、预算和建议分别在哪里。
+
+Structured Output 让 LLM 输出 JSON，Backend 再用 Pydantic 校验为 `TravelGuide`。这样 Frontend 可以继续用同一套组件展示结果，不需要解析自然语言文章。
+
+## 示例
+
+```text
+TravelRequest
+↓
+Prompt Template
+↓
+LLM JSON
+↓
+TravelGuide
+↓
+React Components
+```
+
+## 未来应用
+
+未来 LLM Agent 会继续扩展：
+
+- 使用更严格的 JSON Schema
+- 增加重试和自动修复 JSON
+- 接入搜索工具补充实时信息
+- 接入地图和图片生成能力
+
 ## 问题
 
 ## 理解

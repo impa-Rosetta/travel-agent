@@ -603,6 +603,110 @@ feat: add backend travel service layer
 
 准备真实 LLM 接入前的接口边界和错误处理。
 
+## Day 9
+
+## 日期：
+
+2026-07-11
+
+## 目标：
+
+接入 LLM。
+
+## 完成：
+
+- 创建 LLM Client
+- 创建 Prompt 模板
+- Backend 调用模型生成 TravelGuide
+- 增加 API Key 缺失、LLM 请求失败、JSON 解析失败和 Schema 校验失败的异常处理
+- 创建后端虚拟环境并安装 LLM 相关依赖
+
+## 新增文件：
+
+- backend/.gitignore
+- backend/app/llm/client.py
+- backend/app/prompts/travel_prompt.py
+
+## 修改文件：
+
+- backend/.env.example
+- backend/requirements.txt
+- backend/app/api/travel.py
+- backend/app/services/travel_service.py
+- DEVELOPMENT_LOG.md
+- LEARNING_NOTES.md
+
+## 学习：
+
+- API Key 管理
+- Prompt Engineering
+- Structured Output
+- OpenAI Compatible API
+- Pydantic 校验
+
+## 技术理解：
+
+Mock Agent 升级为 LLM Agent 后，Service Layer 不再手写固定攻略，而是把用户需求转换为 Prompt，调用 OpenAI 兼容 API，让模型返回 TravelGuide JSON。
+
+Backend 负责读取 `.env` 中的密钥和模型配置，调用 LLM，并用 Pydantic 把模型输出校验为稳定的数据结构。Frontend 仍然只接收 TravelGuide，不需要关心内容来自 Mock 还是真实模型。
+
+Day 9 的数据流：
+
+```text
+用户需求
+↓
+Prompt Template
+↓
+LLM
+↓
+JSON Response
+↓
+Pydantic Model
+↓
+Frontend
+```
+
+## 测试结果：
+
+- `backend/.venv` 虚拟环境创建成功。
+- `openai` 和 `python-dotenv` 安装成功。
+- `.venv/bin/python -m py_compile app/main.py app/api/travel.py app/schemas/travel.py app/schemas/guide.py app/llm/client.py app/prompts/travel_prompt.py app/services/travel_service.py` 通过。
+- `.venv/bin/python -c 'import openai, dotenv; print(openai.__version__)'` 通过，OpenAI SDK 版本为 `2.45.0`。
+- 未配置 `.env` 时，`POST /api/travel/request` 返回友好错误：缺少 `LLM_API_KEY`。
+- 配置 DeepSeek API Key 后，`POST /api/travel/request` 成功返回 LLM 生成的 TravelGuide JSON。
+- 前端页面可以展示 LLM 返回的旅游攻略内容。
+
+后端 LLM API 测试截图：
+
+![Day 9 LLM API Test](docs/images/day-9-llm-api-test.png)
+
+前端 LLM 结果展示截图：
+
+![Day 9 LLM Frontend Preview](docs/images/day-9-llm-frontend-preview.png)
+
+## 遇到问题：
+
+- 系统 Python 是 externally managed environment，不能直接全局安装 pip 依赖。
+- 沙盒内安装依赖时无法访问 Python 包源。
+- 授权联网后，本机 Python 证书链校验失败。
+- 初次测试时 `LLM_BASE_URL` 少了 `https://`，导致请求配置不完整。
+
+## 解决方案：
+
+- 创建 `backend/.venv` 项目虚拟环境。
+- 使用授权网络安装依赖。
+- 通过 pip `--trusted-host` 完成依赖安装。
+- 保留 `.env.example`，真实 `.env` 由本地开发者自己创建，不提交 Git。
+- 将 `LLM_BASE_URL` 修正为 `https://api.deepseek.com` 后，真实 LLM 调用成功。
+
+## Git Commit:
+
+feat: integrate llm travel agent
+
+## 下一阶段：
+
+完善 LLM 输出稳定性和错误提示。
+
 ## 日期：
 
 ## 今日目标：
